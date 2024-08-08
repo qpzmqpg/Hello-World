@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="password"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>注册</h1>
+        <form id="registrationForm" onsubmit="sendRegistrationData(); return false;">
+            <label for="name">账号:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="accountpassword">密码:</label>
+            <input type="password" id="accountpassword" name="accountpassword" required>
+
+            <label for="miyao">密钥:</label>
+            <input type="text" id="miyao" name="miyao" required>
+
+            <button type="submit">注册</button>
+        </form>
+        <div id="responseContainer" class="response"></div>
+    </div>
+    <script>
+        // Function to send registration data
+        function sendRegistrationData() {
+            const name = document.getElementById('name').value.trim();
+            const accountpassword = document.getElementById('accountpassword').value.trim();
+            const miyao = document.getElementById('miyao').value.trim();
+            const responseContainer = document.getElementById('responseContainer');
+
+            // Validate input fields
+            if (!name || !accountpassword || !miyao) {
+                responseContainer.className = 'response error';
+                responseContainer.innerText = '所有字段都不能为空';
+                return;
+            }
+
+            // Validate miyao
+            if (parseInt(miyao) !== 123) {
+                responseContainer.className = 'response error';
+                responseContainer.innerText = '密钥错误';
+                return;
+            }
+
+            // Make network request
+            fetch('https://qpzmqpg.yuun.ink/add_student.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `name=${encodeURIComponent(name)}&accountpassword=${encodeURIComponent(accountpassword)}&miyao=${encodeURIComponent(miyao)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseContainer.className = data.success ? 'response success' : 'response error';
+                responseContainer.innerText = `服务器响应: ${data.message}`;
+                alert('服务器响应: ' + data.message);
+                if (window.Android) {
+                    window.Android.handleResponse(JSON.stringify(data.message));
+                }
+            })
+            .catch(error => {
+                responseContainer.className = 'response error';
+                responseContainer.innerText = `错误: ${error.message}`;
+            });
+        }
+    </script>
+</body>
+</html>
