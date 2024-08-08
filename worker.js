@@ -8,7 +8,7 @@ addEventListener('fetch', event => {
 
 async function handleRequest(request) {
   // 连接到 D1 数据库
-  let db = new DB(DurableObjectNamespace, 'your-d1-database-id');
+  let db = new DB(DurableObjectNamespace, '4db9d921-42f7-40f2-bdcf-bcef5ee501c6');
 
   // 查询数据库，例如列出所有表格
   let results = await db.query("PRAGMA table_list");
