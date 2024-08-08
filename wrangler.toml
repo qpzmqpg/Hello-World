@@ -1,9 +1,14 @@
 name = "test-qpzmqpg"
-main = "src/entry.py"
-compatibility_flags = ["python_workers"] # Required for Python Workers
-compatibility_date = "2024-03-29"
+type = "javascript"
+
+workers_dev = true
+
+[env.production]
+workers_dev = false
+
 
 [[d1_databases]]
 binding = "DB" # This will be how you refer to your database in your Worker
 database_name = "qpzmqpg-db"
 database_id = "4db9d921-42f7-40f2-bdcf-bcef5ee501c6"
+
